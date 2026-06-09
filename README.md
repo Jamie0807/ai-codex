@@ -1,78 +1,112 @@
 # ai-codex
 
-这是一个学习和试用 Codex 的实验项目。
+用于学习、验证和沉淀 Codex 工作流的实验仓库。
 
-仓库里会放一些用 Codex 完成的示例：前端页面、设计稿还原、调研文档、项目规范，以及可以复用的自定义 skills。它不是单一产品仓库，更像是一个用于验证 Codex 工作流的练习场。
+当前仓库不是单一产品仓库，而是一个小型练习场：包含 React to-do 示例应用、设计稿/设计规范到代码的还原练习、技术方案调研文档，以及可复用的 Codex skills。
 
-## 当前内容
-
-- React 19 + Vite 的 to-do 示例应用
-- 一次根据 [DESIGN.md](./DESIGN.md) 设计说明编写 CSS 的练习
-- 一次通过 Pencil MCP 读取设计稿并还原到前端代码的练习
-- 一份开发计划：[PLAN.md](./PLAN.md)
-- 一份通过 Codex `/init` 生成的 Agent 项目约束：[AGENTS.md](./AGENTS.md)
-- 大文件上传技术方案调研文档：[docs/research/2026-06-08-large-file-upload-options.md](./docs/research/2026-06-08-large-file-upload-options.md)
-- 自定义 skills：
-  - [research-options](./.codex/skills/research-options/SKILL.md)：用于调研技术方案，并把完整方案写入 Markdown 文件
-  - [quality-gate](./.codex/skills/quality-gate/SKILL.md)：用于按项目已有 lint、test、build 命令做质量验证
-
-## 技术栈
-
-- React 19
-- Vite
-- TypeScript
-- Vitest
-- ESLint
-- lucide-react
-- pnpm
-
-## 常用命令
+## 快速开始
 
 ```bash
 pnpm install
 pnpm run dev
+```
+
+常用验证命令：
+
+```bash
 pnpm run lint
 pnpm run test
 pnpm run build
 ```
 
-也可以使用本仓库沉淀的 `quality-gate` skill 脚本一次性运行已有验证：
+本仓库也提供了 `quality-gate` skill 脚本，可按项目已有脚本自动执行质量检查：
 
 ```bash
 python3 .codex/skills/quality-gate/scripts/run_quality_gate.py
 ```
 
-当前它会自动识别 `pnpm`，并按顺序运行：
+当前检查顺序为：
 
 - `pnpm run lint`
 - `pnpm run test`
 - `pnpm run build`
 
-## 目录说明
+## 当前内容
+
+- React 19 + Vite + TypeScript 实现的 to-do 示例应用。
+- 根据 [DESIGN.md](./DESIGN.md) 进行页面结构、视觉样式和响应式实现的练习。
+- 使用 Pencil MCP 读取 [todo-list.pen](./todo-list.pen) 设计稿并还原为前端代码的实验路径。
+- 面向 Codex Agent 的项目约束：[AGENTS.md](./AGENTS.md)。
+- to-do 应用开发计划：[PLAN.md](./PLAN.md)。
+- 大文件上传技术方案调研：[docs/research/2026-06-08-large-file-upload-options.md](./docs/research/2026-06-08-large-file-upload-options.md)。
+- 项目内沉淀的 Codex skills：
+  - [research-options](./.codex/skills/research-options/SKILL.md)
+  - [quality-gate](./.codex/skills/quality-gate/SKILL.md)
+
+## To-do 示例应用
+
+当前示例应用覆盖一组基础完整的任务管理能力：
+
+- 新增任务。
+- 编辑任务标题。
+- 标记完成或未完成。
+- 删除任务。
+- 按 `All` / `Focus` / `Done` 筛选任务。
+- 使用 `localStorage` 做本地持久化。
+- 提供桌面优先、兼容移动端的响应式布局。
+
+主实现文件：
+
+- [src/App.tsx](./src/App.tsx)：应用状态、交互和页面结构。
+- [src/styles.css](./src/styles.css)：视觉样式、布局和响应式规则。
+- [src/App.test.tsx](./src/App.test.tsx)：公开行为测试。
+
+## 技术栈
+
+当前实际工程依赖以 [package.json](./package.json) 为准：
+
+- React 19
+- Vite 6
+- TypeScript
+- Vitest
+- Testing Library
+- ESLint
+- lucide-react
+- pnpm
+
+项目约束中提到的 `shadcn-ui` 是后续 UI 工程化方向之一；当前代码尚未接入 shadcn-ui 和 Tailwind CSS。
+
+## 目录结构
 
 ```text
 .
 ├── .codex/skills/        # 本项目沉淀的 Codex skills
 ├── docs/research/        # 技术方案调研文档
 ├── src/                  # React 示例应用源码
-├── AGENTS.md             # 通过 Codex /init 生成的 Agent 工作约束
-├── DESIGN.md             # 设计分析
+│   ├── App.tsx           # 主应用组件
+│   ├── App.test.tsx      # 组件行为测试
+│   ├── main.tsx          # 应用入口
+│   └── styles.css        # 全局样式
+├── AGENTS.md             # Agent 工作约束
+├── DESIGN.md             # 设计分析和视觉约束
 ├── PLAN.md               # 开发计划
+├── package.json          # 脚本和依赖
+├── todo-list.pen         # Pencil 生成的 to-do list UI 设计稿
 └── README.md             # 项目说明
 ```
 
-## Skills
+## Codex Skills
 
 ### research-options
 
-用于开放式技术方案调研、架构选型、库选型、社区资料调查等任务。
+用于开放式技术方案调研、架构选型、库选型和社区资料调查。
 
-这个 skill 的当前约定是：
+约定：
 
-- 默认联网调研最新资料
-- 对比 3-5 个候选方案
-- 给出推荐结论和风险验证清单
-- 将完整方案生成到 `docs/research/YYYY-MM-DD-topic-options.md`
+- 默认联网调研最新资料。
+- 对比 3-5 个候选方案。
+- 给出推荐结论、风险和验证清单。
+- 将完整方案生成到 `docs/research/YYYY-MM-DD-topic-options.md`。
 
 示例：
 
@@ -82,14 +116,14 @@ python3 .codex/skills/quality-gate/scripts/run_quality_gate.py
 
 ### quality-gate
 
-用于在完成代码修改前跑项目已有的质量检查。
+用于在代码修改完成前运行项目已有质量检查。
 
-这个 skill 的当前约定是：
+约定：
 
-- 优先读取 `package.json` 和 lockfile
-- 使用项目已有脚本，不临时发明新命令
-- 按 `lint -> typecheck -> test -> build` 的顺序执行可用检查
-- 默认在第一个失败处停止，并摘要失败原因
+- 优先读取 `package.json` 和 lockfile。
+- 使用仓库已有脚本，不临时发明新命令。
+- 按 `lint -> typecheck -> test -> build` 的顺序执行可用检查。
+- 默认在第一个失败处停止，并摘要失败原因。
 
 示例：
 
@@ -97,48 +131,49 @@ python3 .codex/skills/quality-gate/scripts/run_quality_gate.py
 使用 quality-gate skill 做验证
 ```
 
-## 设计稿与样式还原
+## 设计到代码工作流
 
-这个项目里尝试过两种设计到代码的路径：
+这个仓库主要验证两条 UI 实现路径：
 
-1. 先用 [DESIGN.md](./DESIGN.md) 作为测试输入，让 Codex 根据文字化的设计说明编写 CSS 和页面样式。
-2. 后续再使用 Pencil MCP 读取设计稿信息，让 Codex 根据更结构化的设计数据还原 React/Vite 前端实现。
+1. 文字化规范：先用 [DESIGN.md](./DESIGN.md) 固化颜色、排版、间距、状态和响应式约束，再由 Codex 实现页面。
+2. 设计稿结构化读取：使用 Pencil MCP 获取 [todo-list.pen](./todo-list.pen) 中的节点、布局和样式信息，再由 Codex 转换为 React/Vite 前端代码。
 
-当前相关产物包括：
+[todo-list.pen](./todo-list.pen) 当前包含 4 个 1360px 宽的顶层页面：
 
-- [DESIGN.md](./DESIGN.md)：用于测试“根据设计说明写 CSS”的设计分析和视觉约束文档
-- [src/App.tsx](./src/App.tsx)：to-do 示例应用的主要结构和交互
-- [src/styles.css](./src/styles.css)：视觉样式、布局和响应式规则
+- `Todo List App - Today`
+- `Todo List App - Projects`
+- `Todo List App - Calendar`
+- `Todo List App - Settings`
 
-这条路径主要用于验证：
+当前设计变量包括：
 
-- 只有文字化设计说明时，Codex 能否写出接近预期的 CSS
-- Codex 能否理解设计稿结构、层级和视觉 token
-- Codex 能否把设计稿转换为可运行的前端代码
-- Codex 能否在实现后通过 lint、test、build 做闭环验证
-- Pencil MCP + Codex 是否适合沉淀“设计稿转代码”的工作流
+- 主强调色：`#FF5C00` / `#FF8533`
+- 基础前景色：`#1A1A1A`、`#666666`、`#888888`
+- 基础表面色：`#FFFFFF`、`#0A0A0A`
+- 字体：`Funnel Sans`、`Inter`、`Geist`、`IBM Plex Mono`
+- 圆角：`0`、`8`、`12`、`24`、`9999`
 
-## 学习目标
+这条路径用于观察和改进：
 
-这个仓库主要用于练习以下 Codex 使用方式：
+- Codex 是否能从文字化设计说明写出接近预期的 CSS。
+- Codex 是否能理解设计稿结构、层级和视觉 token。
+- Codex 是否能把设计稿还原为可运行的前端实现。
+- Codex 是否能在实现后通过 lint、test、build 完成验证闭环。
+- Pencil MCP + Codex 是否适合沉淀为稳定的设计稿转代码流程。
 
-- 让 Codex 阅读现有项目结构后再修改代码
-- 通过 Pencil MCP 读取设计稿，并让 Codex 还原为前端实现
-- 将一次性的工作流沉淀为可复用 skill
-- 用 skill 固化调研、验证、文档生成等重复流程
-- 通过 lint、test、build 验证 Codex 生成的代码
-- 观察 Codex 在前端实现、文档整理、方案调研中的表现
+## 维护约定
+
+- 新增示例、调研文档、skill 或工程脚本后，同步更新 README。
+- 应用行为变更时，同步补充或调整测试。
+- 与任务无关的改动保持独立，避免在一次提交中混入不相关重构。
+- 生成产物默认不提交，除非发布或复现所必需。
 
 ## 当前状态
 
-项目已经具备一个可运行的 React 示例应用，并配置了 lint、test 和 build。
+项目已经具备一个可运行、可测试、可构建的 React 示例应用。
 
-最近一次 `quality-gate` 验证结果：
+最近一次记录的质量验证结果：
 
 - `pnpm run lint`：通过
 - `pnpm run test`：通过
 - `pnpm run build`：通过
-
-## 备注
-
-这个仓库会随着学习过程持续变化。新增示例、调研文档或 skill 后，建议同步更新 README，让它始终反映当前仓库的真实用途和可运行命令。
