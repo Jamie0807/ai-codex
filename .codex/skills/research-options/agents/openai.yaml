@@ -1,0 +1,7 @@
+interface:
+  display_name: "方案调研"
+  short_description: "搜索源码社区反馈并生成技术方案矩阵"
+  default_prompt: "使用 $research-options 调研技术实现路径，并对比 3-5 个可选方案。"
+
+policy:
+  allow_implicit_invocation: true
